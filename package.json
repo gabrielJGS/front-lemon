@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "git": "git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "@emotion/react": "^11.8.2",
