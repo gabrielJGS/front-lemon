@@ -52,7 +52,6 @@ export default function SignUp() {
       historicoDeConsumo: formValues.map((values) => parseFloat(values))
     }
     await api.post('/elegibilidade', body).then((response) => {
-      console.log(response)
       if (response.data.elegivel) {
         setMessageType('success');
         setMessage(`Parabéns, você foi aceito para ser um cliente Lemon!\nVocê economizará por volta de ${response.data.economiaAnualDeCO2} de CO2 anualmente!`);
@@ -80,6 +79,13 @@ export default function SignUp() {
     setFormValues([...formValues, ""])
   }
 
+  let removeFormFields = (i: number) => {
+    let newFormValues = [...formValues];
+    console.log(i)
+    console.log(newFormValues)
+    newFormValues.splice(i, 1);
+    setFormValues(newFormValues)
+  }
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -96,7 +102,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5" style={{ textAlign: 'center' }}>Sua conta de luz pode redefinir o futuro.</Typography>
           Descubra uma nova forma de consumir energia
           {loading ? <CircularProgress color="success" /> : null}
-          {message ? <Alert style={{whiteSpace: 'pre-line'}} severity={messageType}>{message}</Alert> : null}
+          {message ? <Alert style={{ whiteSpace: 'pre-line' }} severity={messageType}>{message}</Alert> : null}
 
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -179,14 +185,22 @@ export default function SignUp() {
                       name={`value`}
                       value={element || ""}
                       onChange={e => handleChange(index, e)}
-                      InputProps={index + 1 == formValues.length && index < 12 ? {
+                      InputProps={index + 1 == formValues.length && index <= 10 ? {
                         endAdornment:
                           <Button
-                            onClick={() => { if (index < 12) addFormFields() }}
+                            onClick={() => { if (index <= 10) addFormFields() }}
                             variant="contained"
                           >
                             Adicionar
                           </Button>
+                      } : index + 2 == formValues.length ? {
+                        endAdornment: <Button
+                          color="error"
+                          onClick={() => { removeFormFields(index) }}
+                          variant="contained"
+                        >
+                          Remover
+                        </Button>
                       } : { endAdornment: null }}
                     />
                   </Grid>
